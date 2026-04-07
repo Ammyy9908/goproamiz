@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply bg-[#f8fafc] text-slate-900 font-sans;
+  }
+}
+
+/* Monaco Editor Overrides */
+.monaco-editor {
+  padding-top: 8px;
+}
+
+@layer utilities {
+  .scrollbar-dark::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-dark::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 10px;
+  }
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background: #484f58;
+  }
+
+  .scrollbar-light::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-light::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-light::-webkit-scrollbar-thumb {
+    background: #d0d7de;
+    border-radius: 10px;
+  }
+  .scrollbar-light::-webkit-scrollbar-thumb:hover {
+    background: #afb8c1;
+  }
+}
+
