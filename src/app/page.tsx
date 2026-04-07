@@ -1,33 +1,32 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
-import { 
-  Play, 
-  Share2, 
-  Trash2, 
-  Maximize2, 
-  Moon, 
-  Sun, 
+import React, { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
+import {
+  Play,
+  Share2,
+  Trash2,
+  Maximize2,
   Terminal as TerminalIcon,
   Loader2,
-  Search
-} from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { LANGUAGES, type Language } from '../constants';
+  Search,
+} from "lucide-react";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { LANGUAGES, type Language } from "../constants";
 
-// Dynamically import the editor to avoid SSR issues
-const CodeEditor = dynamic(() => import('@/components/CodeEditor'), { 
+const CodeEditor = dynamic(() => import("@/components/CodeEditor"), {
   ssr: false,
   loading: () => (
-    <div className="flex items-center justify-center h-full bg-[#1e1e1e] text-slate-500">
-      <div className="flex flex-col items-center gap-2">
-        <Loader2 size={24} className="animate-spin" />
-        <span className="text-xs">Loading Editor...</span>
+    <div className="flex items-center justify-center h-full bg-hacker-bg text-hacker-muted">
+      <div className="flex flex-col items-center gap-2 font-mono text-sm">
+        <Loader2 size={24} className="animate-spin text-hacker-bright" />
+        <span className="text-xs tracking-widest uppercase opacity-80">
+          Initializing buffer…
+        </span>
       </div>
     </div>
-  )
+  ),
 });
 
 function cn(...inputs: ClassValue[]) {
@@ -37,235 +36,216 @@ function cn(...inputs: ClassValue[]) {
 export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<Language>(LANGUAGES[0]);
   const [code, setCode] = useState(LANGUAGES[0].defaultCode);
-  const [output, setOutput] = useState<string>('');
+  const [output, setOutput] = useState<string>("");
   const [isRunning, setIsRunning] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Update code when language changes
   useEffect(() => {
     if (isMounted) {
       setCode(selectedLanguage.defaultCode);
-      setOutput('');
+      setOutput("");
     }
   }, [selectedLanguage, isMounted]);
 
   const handleRun = async () => {
     setIsRunning(true);
-    setOutput('Connecting to custom execution backend...');
-    
-    // Placeholder for custom backend logic
+    setOutput("Connecting to custom execution backend...");
+
     setTimeout(() => {
       setIsRunning(false);
-      setOutput('Ready for custom backend integration.\n\nPlease implement your execution logic in handleRun.');
+      setOutput(
+        "Ready for custom backend integration.\n\nPlease implement your execution logic in handleRun."
+      );
     }, 1000);
   };
 
   const handleClear = () => {
-    setOutput('');
+    setOutput("");
   };
 
-  const filteredLanguages = LANGUAGES.filter(lang => 
+  const filteredLanguages = LANGUAGES.filter((lang) =>
     lang.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <div className={cn(
-      "flex h-screen w-full overflow-hidden transition-colors duration-300",
-      isDarkMode ? "bg-[#0d1117] text-slate-300" : "bg-[#f8fafc] text-slate-900"
-    )}>
-      {/* Sidebar - Language Selection */}
-      <aside className={cn(
-        "flex flex-col border-r transition-all duration-300 w-64 shrink-0",
-        isDarkMode ? "bg-[#161b22] border-slate-800" : "bg-white border-slate-200"
-      )}>
-        <div className="p-4 border-b border-inherit">
-          <div className={cn(
-            "flex items-center gap-2 px-3 py-2 rounded-lg text-sm",
-            isDarkMode ? "bg-slate-800" : "bg-slate-100"
-          )}>
-            <Search size={16} className="text-slate-500" />
-            <input 
-              type="text" 
-              placeholder="Search languages..." 
-              className="bg-transparent border-none outline-none w-full text-inherit placeholder:text-slate-500"
+    <div className="relative z-[1] flex h-screen w-full overflow-hidden bg-hacker-bg text-hacker-green shadow-hacker">
+      <aside className="flex flex-col w-64 shrink-0 border-r border-hacker-border bg-hacker-surface">
+        <div className="p-4 border-b border-hacker-border">
+          <div className="flex items-center gap-2 px-3 py-2 rounded border border-hacker-border bg-hacker-raised/80 shadow-hacker-sm">
+            <Search size={16} className="text-hacker-muted shrink-0" />
+            <input
+              type="text"
+              placeholder="filter modules..."
+              className="bg-transparent border-none outline-none w-full text-sm text-hacker-green placeholder:text-hacker-dim placeholder:uppercase placeholder:text-[10px]"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
         </div>
-        
-        <div className={cn(
-          "flex-1 overflow-y-auto py-2",
-          isDarkMode ? "scrollbar-dark" : "scrollbar-light"
-        )}>
+
+        <div className="flex-1 overflow-y-auto py-2 scrollbar-hacker">
           {filteredLanguages.map((lang) => (
             <button
               key={lang.id}
               onClick={() => setSelectedLanguage(lang)}
               className={cn(
-                "w-full flex items-center gap-3 px-4 py-2.5 transition-all text-sm font-medium relative group",
-                selectedLanguage.id === lang.id 
-                  ? (isDarkMode ? "bg-blue-600/10 text-blue-400" : "bg-blue-50 text-blue-600")
-                  : (isDarkMode ? "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50" : "text-slate-500 hover:text-slate-700 hover:bg-slate-50")
+                "w-full flex items-center gap-3 px-4 py-2.5 transition-all text-sm font-medium relative group font-mono",
+                selectedLanguage.id === lang.id
+                  ? "bg-hacker-dim/30 text-hacker-bright shadow-[inset_0_0_12px_rgba(0,255,65,0.08)]"
+                  : "text-hacker-muted hover:text-hacker-green hover:bg-hacker-raised/60"
               )}
             >
-              <lang.icon size={18} className={cn(
-                "transition-transform group-hover:scale-110",
-                selectedLanguage.id === lang.id ? "text-blue-500" : "text-slate-500"
-              )} />
+              <lang.icon
+                size={18}
+                className={cn(
+                  "transition-transform group-hover:scale-110 shrink-0",
+                  selectedLanguage.id === lang.id ? "text-hacker-bright" : "text-hacker-dim"
+                )}
+              />
               <span>{lang.name}</span>
               {selectedLanguage.id === lang.id && (
-                <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r-full" />
+                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-hacker-bright shadow-[0_0_8px_#39ff14]" />
               )}
             </button>
           ))}
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className={cn(
-          "h-16 flex items-center justify-between px-6 border-b shrink-0",
-          isDarkMode ? "bg-[#161b22] border-slate-800" : "bg-white border-slate-200"
-        )}>
+        <header className="h-16 flex items-center justify-between px-6 border-b border-hacker-border shrink-0 bg-hacker-surface/90 backdrop-blur-sm">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">
-                P
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded border border-hacker-border bg-hacker-raised flex items-center justify-center text-hacker-bright font-mono text-sm shadow-hacker-sm">
+                &gt;_
               </div>
-              <span className="font-bold text-xl tracking-tight hidden sm:block">
-                Programiz <span className="text-blue-600">Compiler</span>
-              </span>
+              <div className="hidden sm:block font-mono">
+                <span className="font-bold text-hacker-bright tracking-tight text-lg">
+                  PROGRAMIZ
+                </span>
+                <span className="text-hacker-muted text-xs ml-2 tracking-[0.2em]">
+                  // COMPILER
+                </span>
+              </div>
             </div>
-            
-            <div className={cn(
-              "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium ml-4",
-              isDarkMode ? "bg-slate-800" : "bg-slate-100"
-            )}>
-              <selectedLanguage.icon size={14} />
+
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded border border-hacker-border bg-hacker-bg/80 text-xs font-mono text-hacker-muted">
+              <selectedLanguage.icon size={14} className="text-hacker-bright" />
               <span>{selectedLanguage.extension}</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-            <button 
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className={cn(
-                "p-2 rounded-lg transition-colors",
-                isDarkMode ? "hover:bg-slate-800" : "hover:bg-slate-100"
-              )}
+            <button
+              type="button"
+              className="p-2 rounded border border-transparent hover:border-hacker-border hover:bg-hacker-raised text-hacker-muted hover:text-hacker-bright transition-colors hidden md:flex"
+              aria-label="Share"
             >
-              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button className={cn(
-              "p-2 rounded-lg transition-colors hidden md:flex",
-              isDarkMode ? "hover:bg-slate-800" : "hover:bg-slate-100"
-            )}>
               <Share2 size={18} />
             </button>
-            <button 
+            <button
+              type="button"
               onClick={handleRun}
               disabled={isRunning}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
+              className="flex items-center gap-2 px-5 py-2 rounded border border-hacker-bright/60 bg-hacker-dim/40 font-mono font-semibold text-hacker-bright transition-all hover:bg-hacker-dim/70 hover:shadow-[0_0_18px_rgba(57,255,20,0.25)] disabled:opacity-50 disabled:cursor-not-allowed shadow-hacker-sm"
             >
-              {isRunning ? <Loader2 size={18} className="animate-spin" /> : <Play size={18} fill="currentColor" />}
-              <span>Run</span>
+              {isRunning ? (
+                <Loader2 size={18} className="animate-spin" />
+              ) : (
+                <Play size={18} fill="currentColor" />
+              )}
+              <span>EXEC</span>
             </button>
           </div>
         </header>
 
-        {/* Editor & Output Split View */}
         <div className="flex-1 flex flex-col md:flex-row min-h-0">
-          {/* Editor Section */}
-          <div className="flex-1 flex flex-col min-w-0 border-r border-slate-800/10">
-            <div className={cn(
-              "h-10 flex items-center px-4 border-b shrink-0",
-              isDarkMode ? "bg-[#0d1117] border-slate-800" : "bg-slate-50 border-slate-200"
-            )}>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Editor</span>
+          <div className="flex-1 flex flex-col min-w-0 border-r border-hacker-border bg-hacker-bg">
+            <div className="h-10 flex items-center px-4 border-b border-hacker-border shrink-0 bg-hacker-surface/50">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-hacker-dim">
+                [ src ]
+              </span>
               <div className="ml-auto flex items-center gap-2">
-                <button className="p-1 text-slate-400 hover:text-slate-600 transition-colors">
+                <button
+                  type="button"
+                  className="p-1 text-hacker-dim hover:text-hacker-bright transition-colors"
+                  aria-label="Maximize"
+                >
                   <Maximize2 size={14} />
                 </button>
               </div>
             </div>
-            <div className="flex-1 relative">
+            <div className="flex-1 relative min-h-0">
               {isMounted ? (
                 <CodeEditor
                   language={selectedLanguage.monacoLanguage}
                   value={code}
-                  theme={isDarkMode ? "vs-dark" : "light"}
-                  onChange={(value) => setCode(value || '')}
+                  onChange={(value) => setCode(value || "")}
                 />
               ) : (
-                <div className="flex items-center justify-center h-full bg-[#1e1e1e] text-slate-500">
-                  <div className="flex flex-col items-center gap-2">
-                    <Loader2 size={24} className="animate-spin" />
-                    <span className="text-xs">Loading Editor...</span>
+                <div className="flex items-center justify-center h-full bg-hacker-bg text-hacker-muted">
+                  <div className="flex flex-col items-center gap-2 font-mono text-sm">
+                    <Loader2 size={24} className="animate-spin text-hacker-bright" />
+                    <span className="text-xs tracking-widest uppercase opacity-80">
+                      Initializing buffer…
+                    </span>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Output Section */}
-          <div className={cn(
-            "flex-1 flex flex-col min-w-0",
-            isDarkMode ? "bg-[#0d1117]" : "bg-white"
-          )}>
-            <div className={cn(
-              "h-10 flex items-center px-4 border-b shrink-0",
-              isDarkMode ? "bg-[#0d1117] border-slate-800" : "bg-slate-50 border-slate-200"
-            )}>
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Output</span>
-              <button 
+          <div className="flex-1 flex flex-col min-w-0 bg-hacker-bg">
+            <div className="h-10 flex items-center px-4 border-b border-hacker-border shrink-0 bg-hacker-surface/50">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-[0.25em] text-hacker-dim">
+                [ stdout ]
+              </span>
+              <button
+                type="button"
                 onClick={handleClear}
-                className="ml-auto flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-slate-600 transition-colors"
+                className="ml-auto flex items-center gap-1.5 text-[10px] font-mono font-medium uppercase tracking-wider text-hacker-dim hover:text-hacker-bright transition-colors"
               >
                 <Trash2 size={14} />
-                <span>Clear</span>
+                <span>clear</span>
               </button>
             </div>
-            <div className={cn(
-              "flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap",
-              isDarkMode ? "text-slate-300" : "text-slate-700"
-            )}>
+            <div className="flex-1 p-6 font-mono text-sm overflow-auto whitespace-pre-wrap text-hacker-muted scrollbar-hacker">
               {output ? (
-                <div className="animate-in fade-in slide-in-from-top-1 duration-300">
+                <div className="animate-in fade-in slide-in-from-top-1 duration-300 text-hacker-green">
                   {output}
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-3 opacity-50">
-                  <TerminalIcon size={48} strokeWidth={1} />
-                  <p>Run your code to see the output here</p>
+                <div className="flex flex-col items-center justify-center h-full text-hacker-dim gap-3 opacity-70">
+                  <TerminalIcon size={48} strokeWidth={1} className="text-hacker-dim" />
+                  <p className="text-xs tracking-widest uppercase font-mono">
+                    Awaiting execution…
+                  </p>
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* Footer / Status Bar */}
-        <footer className={cn(
-          "h-8 flex items-center px-4 border-t text-[10px] uppercase tracking-widest font-bold shrink-0",
-          isDarkMode ? "bg-[#161b22] border-slate-800 text-slate-500" : "bg-white border-slate-200 text-slate-400"
-        )}>
+        <footer className="h-8 flex items-center px-4 border-t border-hacker-border text-[10px] uppercase tracking-[0.2em] font-mono font-bold shrink-0 bg-hacker-surface text-hacker-dim">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1.5">
-              <div className={cn("w-2 h-2 rounded-full", isRunning ? "bg-yellow-500 animate-pulse" : "bg-green-500")} />
-              <span>{isRunning ? "Executing..." : "Ready"}</span>
+              <div
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  isRunning ? "bg-hacker-bright animate-pulse shadow-[0_0_8px_#39ff14]" : "bg-hacker-green shadow-[0_0_6px_#00ff41]"
+                )}
+              />
+              <span>{isRunning ? "RUNNING" : "READY"}</span>
             </div>
-            <span>{selectedLanguage.name}</span>
+            <span className="text-hacker-muted">{selectedLanguage.name}</span>
             <span>UTF-8</span>
           </div>
           <div className="ml-auto flex items-center gap-4">
-            <span>Line 1, Column 1</span>
+            <span>Ln 1, Col 1</span>
           </div>
         </footer>
       </main>

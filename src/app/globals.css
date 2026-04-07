@@ -1,8 +1,60 @@
 @import "tailwindcss";
 
+@theme {
+  --color-hacker-bg: #030306;
+  --color-hacker-surface: #0a0f0c;
+  --color-hacker-raised: #0f1612;
+  --color-hacker-border: #1a3322;
+  --color-hacker-dim: #1f4d2e;
+  --color-hacker-green: #00ff41;
+  --color-hacker-bright: #39ff14;
+  --color-hacker-muted: #2ee85a;
+  --shadow-hacker: 0 0 24px rgba(0, 255, 65, 0.12), inset 0 0 80px rgba(0, 30, 15, 0.06);
+  --shadow-hacker-sm: 0 0 14px rgba(0, 255, 65, 0.1);
+}
+
 @layer base {
+  :root {
+    --hacker-bg: #030306;
+    --hacker-surface: #0a0f0c;
+    --hacker-green: #00ff41;
+    --hacker-border: #1a3322;
+  }
+
   body {
-    @apply bg-[#f8fafc] text-slate-900 font-sans;
+    @apply bg-hacker-bg text-hacker-green font-mono antialiased;
+    text-shadow: 0 0 1px rgba(0, 255, 65, 0.35);
+  }
+
+  /* Subtle CRT scanlines */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 50;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.12),
+      rgba(0, 0, 0, 0.12) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    opacity: 0.45;
+  }
+
+  /* Vignette */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 49;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      rgba(0, 0, 0, 0.45) 100%
+    );
   }
 }
 
@@ -12,32 +64,19 @@
 }
 
 @layer utilities {
-  .scrollbar-dark::-webkit-scrollbar {
-    width: 4px;
+  .scrollbar-hacker::-webkit-scrollbar {
+    width: 6px;
   }
-  .scrollbar-dark::-webkit-scrollbar-track {
-    background: transparent;
+  .scrollbar-hacker::-webkit-scrollbar-track {
+    background: rgba(0, 20, 10, 0.4);
   }
-  .scrollbar-dark::-webkit-scrollbar-thumb {
-    background: #30363d;
-    border-radius: 10px;
+  .scrollbar-hacker::-webkit-scrollbar-thumb {
+    background: #1a4d2e;
+    border-radius: 2px;
+    box-shadow: 0 0 6px rgba(0, 255, 65, 0.2);
   }
-  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
-    background: #484f58;
-  }
-
-  .scrollbar-light::-webkit-scrollbar {
-    width: 4px;
-  }
-  .scrollbar-light::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .scrollbar-light::-webkit-scrollbar-thumb {
-    background: #d0d7de;
-    border-radius: 10px;
-  }
-  .scrollbar-light::-webkit-scrollbar-thumb:hover {
-    background: #afb8c1;
+  .scrollbar-hacker::-webkit-scrollbar-thumb:hover {
+    background: #2a6d3e;
   }
 }
 
