@@ -48,6 +48,7 @@ function defineHackerTheme(monaco: Monaco) {
 }
 
 export default function CodeEditor({ language, value, onChange }: CodeEditorProps) {
+  console.log(language, value);
   return (
     <Editor
       height="100%"
