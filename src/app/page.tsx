@@ -125,7 +125,7 @@ export default function Home() {
               </div>
               <div className="hidden sm:block font-mono">
                 <span className="font-bold text-hacker-bright tracking-tight text-lg">
-                  PROGRAMIZ
+                  Coding
                 </span>
                 <span className="text-hacker-muted text-xs ml-2 tracking-[0.2em]">
                   // COMPILER
